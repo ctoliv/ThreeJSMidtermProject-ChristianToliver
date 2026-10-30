@@ -454,6 +454,92 @@ fountainGlow.position.set(5, 2.25, 4);
 fountainGlow.scale.set(1, 1.3, 1);
 scene.add(fountainGlow);
 
+const fountainSprays = [];
+
+for (let ringIndex = 0; ringIndex < 3; ringIndex += 1) {
+    const spray =
+        new THREE.Mesh(
+            new THREE.ConeGeometry(
+                0.3 - ringIndex * 0.05,
+                0.95 - ringIndex * 0.12,
+                12,
+                1,
+                true
+            ),
+            new THREE.MeshPhongMaterial({
+                color: 0x9bdcff,
+                emissive: 0x173b5c,
+                shininess: 120,
+                transparent: true,
+                opacity: 0.75 - ringIndex * 0.12,
+                side: THREE.DoubleSide
+            })
+        );
+
+    spray.position.set(
+        5,
+        2.75 + ringIndex * 0.35,
+        4
+    );
+    spray.castShadow = true;
+    scene.add(spray);
+    fountainSprays.push(spray);
+}
+
+const fountainRipples = [];
+
+for (let ringIndex = 0; ringIndex < 4; ringIndex += 1) {
+    const ripple =
+        new THREE.Mesh(
+            new THREE.TorusGeometry(
+                0.45 + ringIndex * 0.28,
+                0.018,
+                6,
+                48
+            ),
+            new THREE.MeshBasicMaterial({
+                color: 0xbfeaff,
+                transparent: true,
+                opacity: 0.75
+            })
+        );
+
+    ripple.rotation.x = Math.PI / 2;
+    ripple.position.set(5, 0.625, 4);
+    scene.add(ripple);
+    fountainRipples.push(ripple);
+}
+
+const fountainDrops = [];
+
+for (let i = 0; i < 36; i += 1) {
+    const drop =
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                0.045 + (i % 4) * 0.008,
+                8,
+                6
+            ),
+            new THREE.MeshPhongMaterial({
+                color: 0xc8efff,
+                emissive: 0x234a66,
+                shininess: 160,
+                transparent: true,
+                opacity: 0.9
+            })
+        );
+
+    drop.castShadow = true;
+    scene.add(drop);
+
+    fountainDrops.push({
+        mesh: drop,
+        angle: (i / 36) * Math.PI * 2,
+        offset: i / 36,
+        radius: 0.65 + (i % 3) * 0.22
+    });
+}
+
 
 // ---------------------------------------------------
 // Crates and Barrels
@@ -615,7 +701,94 @@ fountainGlow.scale.set(
     pulse
 );
 
-// 3. Make the banners sway
+// 3. Animate the central fountain sprays
+const fountainTime =
+    Date.now() * 0.001;
+
+fountainSprays.forEach((spray, index) => {
+    const sprayPulse =
+        1 +
+        Math.sin(fountainTime * 2.2 - index * 0.8) *
+        (0.12 + index * 0.03);
+
+    spray.scale.set(
+        sprayPulse,
+        0.75 + sprayPulse * 0.25,
+        sprayPulse
+    );
+
+    spray.rotation.y =
+        fountainTime * (0.25 + index * 0.08);
+});
+
+// 4. Animate droplets in curved, repeated water arcs
+fountainDrops.forEach((dropData) => {
+    const progress =
+        (fountainTime * 0.32 + dropData.offset) % 1;
+
+    const arc =
+        Math.sin(progress * Math.PI);
+
+    const horizontalRadius =
+        dropData.radius *
+        (0.15 + progress * 0.85);
+
+    dropData.mesh.position.set(
+        5 +
+            Math.cos(
+                dropData.angle + fountainTime * 0.12
+            ) *
+            horizontalRadius,
+        2.25 +
+            arc * 1.8 -
+            progress * 0.15,
+        4 +
+            Math.sin(
+                dropData.angle + fountainTime * 0.12
+            ) *
+            horizontalRadius
+    );
+
+    const dropSize =
+        0.7 +
+        arc * 0.65;
+
+    dropData.mesh.scale.set(
+        dropSize,
+        dropSize * 1.25,
+        dropSize
+    );
+});
+
+// 5. Expand circular water ripples across the basin
+fountainRipples.forEach((ripple, index) => {
+    const ripplePhase =
+        (fountainTime * 0.45 + index / fountainRipples.length) %
+        1;
+
+    const rippleScale =
+        0.55 + ripplePhase * 1.05;
+
+    ripple.scale.set(
+        rippleScale,
+        rippleScale,
+        rippleScale
+    );
+
+    ripple.material.opacity =
+        0.7 * (1 - ripplePhase);
+});
+
+const surfacePulse =
+    1 + Math.sin(fountainTime * 2.4) * 0.018;
+
+fountainWater.scale.set(
+    surfacePulse,
+    1,
+    surfacePulse
+);
+
+// 6. Make the banners sway
 leftBanner.rotation.z =
     Math.sin(Date.now() * 0.002) * 0.08;
 
