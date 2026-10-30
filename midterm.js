@@ -319,7 +319,6 @@ const leftGatePillar =
 leftGatePillar.castShadow = true;
 leftGatePillar.receiveShadow = true;
 leftGatePillar.position.set(-2.2, 1.6, -7);
-leftGatePillar.scale.set(1, 1.1, 1);
 scene.add(leftGatePillar);
 
 const rightGatePillar =
@@ -330,7 +329,6 @@ const rightGatePillar =
 rightGatePillar.castShadow = true;
 rightGatePillar.receiveShadow = true;
 rightGatePillar.position.set(2.2, 1.6, -7);
-rightGatePillar.rotation.z = Math.PI / 24;
 scene.add(rightGatePillar);
 
 const gateArch =
@@ -523,12 +521,11 @@ scene.add(bannerPoleLeft);
 
 const leftBanner =
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.12, 2.1, 1.25),
+        new THREE.BoxGeometry(1.25, 2.1, 0.12),
         bannerMaterial
     );
 leftBanner.castShadow = true;
-leftBanner.position.set(-3.3, 3.1, -5.75);
-leftBanner.rotation.x = -Math.PI / 8;
+leftBanner.position.set(-2.675, 4.25, -6.4);
 scene.add(leftBanner);
 
 const bannerPoleRight =
@@ -541,12 +538,11 @@ scene.add(bannerPoleRight);
 
 const rightBanner =
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.12, 2.1, 1.25),
+        new THREE.BoxGeometry(1.25, 2.1, 0.12),
         bannerMaterial
     );
 rightBanner.castShadow = true;
-rightBanner.position.set(3.3, 3.1, -5.75);
-rightBanner.rotation.x = Math.PI / 8;
+rightBanner.position.set(2.675, 4.25, -6.4);
 scene.add(rightBanner);
 
 
