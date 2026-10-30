@@ -16,6 +16,25 @@
         canvas {
             display: block;
         }
+
+        #instructions {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.65);
+            color: white;
+            font-family: Arial, sans-serif;
+            z-index: 10;
+        }
+
+        #instructions h3 {
+            margin-top: 0;
+        }
+
+        #instructions p {
+            margin: 4px 0;
+        }
     </style>
 </head>
 
@@ -29,6 +48,13 @@
         }
     }
     </script>
+
+    <div id="instructions">
+        <h3>Controls</h3>
+        <p>1 - Toggle fountain glow</p>
+        <p>2 - Toggle banner animation</p>
+        <p>3 - Toggle gate spotlight</p>
+    </div>
 
     <script type="module" src="./midterm.js"></script>
 

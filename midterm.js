@@ -679,6 +679,43 @@ upperBranch.position.set(-7.05, 4.45, 5);
 upperBranch.rotation.z = Math.PI / 10;
 scene.add(upperBranch);
 
+// ---------------------------------------------------
+// Keyboard Controls
+// ---------------------------------------------------
+
+let fountainGlowOn = true;
+let bannersMoving = true;
+let gateLightOn = true;
+
+window.addEventListener(
+    'keydown',
+    (event) => {
+
+        if (event.key === '1') {
+            fountainGlowOn =
+                !fountainGlowOn;
+
+            fountainGlow.visible =
+                fountainGlowOn;
+
+            fountainLight.visible =
+                fountainGlowOn;
+        }
+
+        if (event.key === '2') {
+            bannersMoving =
+                !bannersMoving;
+        }
+
+        if (event.key === '3') {
+            gateLightOn =
+                !gateLightOn;
+
+            gateSpotlight.visible =
+                gateLightOn;
+        }
+    }
+);
 
 // ---------------------------------------------------
 // Animation Loop
@@ -789,11 +826,18 @@ fountainWater.scale.set(
 );
 
 // 6. Make the banners sway
-leftBanner.rotation.z =
-    Math.sin(Date.now() * 0.002) * 0.08;
+if (bannersMoving) {
 
-rightBanner.rotation.z =
-    -Math.sin(Date.now() * 0.002) * 0.08;
+        leftBanner.rotation.z =
+            Math.sin(Date.now() * 0.0025) * 0.20;
+        leftBanner.rotation.y =
+            Math.sin(Date.now() * 0.0025) * 0.12;
+
+        rightBanner.rotation.z =
+            -Math.sin(Date.now() * 0.0025) * 0.20;
+        rightBanner.rotation.y =
+            -Math.sin(Date.now() * 0.0025) * 0.12;
+    }
 
     controls.update();
 
