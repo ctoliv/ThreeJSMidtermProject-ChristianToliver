@@ -602,6 +602,26 @@ function animate() {
 
     requestAnimationFrame(animate);
 
+// 1. Slowly rotate the fountain glow
+fountainGlow.rotation.y += 0.03;
+
+// 2. Make the fountain glow pulse
+const pulse =
+    1 + Math.sin(Date.now() * 0.003) * 0.15;
+
+fountainGlow.scale.set(
+    pulse,
+    pulse,
+    pulse
+);
+
+// 3. Make the banners sway
+leftBanner.rotation.z =
+    Math.sin(Date.now() * 0.002) * 0.08;
+
+rightBanner.rotation.z =
+    -Math.sin(Date.now() * 0.002) * 0.08;
+
     controls.update();
 
     renderer.render(
