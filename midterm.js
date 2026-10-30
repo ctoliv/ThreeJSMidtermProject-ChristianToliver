@@ -103,18 +103,71 @@ scene.add(ground);
 
 
 // ---------------------------------------------------
-// Temporary Ambient Light
+// Courtyard Lighting
 // ---------------------------------------------------
 
-// This will be adjusted during the lighting checkpoint.
-
+// Low nighttime ambient light
 const ambientLight =
     new THREE.AmbientLight(
-        0xffffff,
-        0.8
+        0x8090b0,
+        0.45
     );
 
 scene.add(ambientLight);
+
+
+// ---------------------------------------------------
+// Point Light - Fountain Glow
+// ---------------------------------------------------
+
+const fountainLight =
+    new THREE.PointLight(
+        0x55aaff,
+        35,
+        15
+    );
+
+fountainLight.position.set(
+    5,
+    3,
+    4
+);
+
+fountainLight.castShadow = true;
+
+scene.add(fountainLight);
+
+
+// ---------------------------------------------------
+// Spot Light - Castle Gate
+// ---------------------------------------------------
+
+const gateSpotlight =
+    new THREE.SpotLight(
+        0xffcc88,
+        80,
+        30,
+        Math.PI / 6,
+        0.4,
+        1
+    );
+
+gateSpotlight.position.set(
+    0,
+    10,
+    5
+);
+
+gateSpotlight.target.position.set(
+    0,
+    1.5,
+    -7
+);
+
+gateSpotlight.castShadow = true;
+
+scene.add(gateSpotlight);
+scene.add(gateSpotlight.target);
 
 
 // ---------------------------------------------------
@@ -180,6 +233,8 @@ const leftWall =
         new THREE.BoxGeometry(7.2, 4, 1),
         stoneMaterial
     );
+leftWall.castShadow = true;
+leftWall.receiveShadow = true;
 leftWall.position.set(-5.4, 2, -7);
 scene.add(leftWall);
 
@@ -188,6 +243,8 @@ const rightWall =
         new THREE.BoxGeometry(7.2, 4, 1),
         stoneMaterial
     );
+rightWall.castShadow = true;
+rightWall.receiveShadow = true;
 rightWall.position.set(5.4, 2, -7);
 scene.add(rightWall);
 
@@ -213,6 +270,8 @@ const leftTower =
         new THREE.CylinderGeometry(1.5, 1.7, 6, 12),
         stoneMaterial
     );
+leftTower.castShadow = true;
+leftTower.receiveShadow = true;
 leftTower.position.set(-9, 3, -7);
 leftTower.rotation.y = Math.PI / 12;
 scene.add(leftTower);
@@ -222,6 +281,8 @@ const rightTower =
         new THREE.CylinderGeometry(1.5, 1.7, 6, 12),
         stoneMaterial
     );
+rightTower.castShadow = true;
+rightTower.receiveShadow = true;
 rightTower.position.set(9, 3, -7);
 rightTower.scale.set(1.05, 1, 1.05);
 scene.add(rightTower);
@@ -231,6 +292,7 @@ const leftTowerRoof =
         new THREE.ConeGeometry(1.9, 2.2, 12),
         roofMaterial
     );
+leftTowerRoof.castShadow = true;
 leftTowerRoof.position.set(-9, 7.1, -7);
 leftTowerRoof.rotation.y = Math.PI / 8;
 scene.add(leftTowerRoof);
@@ -240,6 +302,7 @@ const rightTowerRoof =
         new THREE.ConeGeometry(1.9, 2.2, 12),
         roofMaterial
     );
+rightTowerRoof.castShadow = true;
 rightTowerRoof.position.set(9, 7.1, -7);
 scene.add(rightTowerRoof);
 
@@ -253,6 +316,8 @@ const leftGatePillar =
         new THREE.CylinderGeometry(0.65, 0.75, 3.2, 12),
         stoneMaterial
     );
+leftGatePillar.castShadow = true;
+leftGatePillar.receiveShadow = true;
 leftGatePillar.position.set(-2.2, 1.6, -7);
 leftGatePillar.scale.set(1, 1.1, 1);
 scene.add(leftGatePillar);
@@ -262,6 +327,8 @@ const rightGatePillar =
         new THREE.CylinderGeometry(0.65, 0.75, 3.2, 12),
         stoneMaterial
     );
+rightGatePillar.castShadow = true;
+rightGatePillar.receiveShadow = true;
 rightGatePillar.position.set(2.2, 1.6, -7);
 rightGatePillar.rotation.z = Math.PI / 24;
 scene.add(rightGatePillar);
@@ -277,6 +344,8 @@ const gateArch =
         ),
         stoneMaterial
     );
+gateArch.castShadow = true;
+gateArch.receiveShadow = true;
 gateArch.position.set(0, 3, -7);
 gateArch.rotation.z = 0;
 scene.add(gateArch);
@@ -286,6 +355,8 @@ const gateDoor =
         new THREE.BoxGeometry(3.4, 3.1, 0.25),
         woodMaterial
     );
+gateDoor.castShadow = true;
+gateDoor.receiveShadow = true;
 gateDoor.position.set(0, 1.55, -7.15);
 scene.add(gateDoor);
 
@@ -345,6 +416,8 @@ const fountainBase =
         new THREE.CylinderGeometry(1.7, 2, 0.5, 16),
         darkStoneMaterial
     );
+fountainBase.castShadow = true;
+fountainBase.receiveShadow = true;
 fountainBase.position.set(5, 0.25, 4);
 scene.add(fountainBase);
 
@@ -361,6 +434,7 @@ const fountainPost =
         new THREE.CylinderGeometry(0.25, 0.35, 1.8, 12),
         stoneMaterial
     );
+fountainPost.castShadow = true;
 fountainPost.position.set(5, 1.3, 4);
 scene.add(fountainPost);
 
@@ -392,6 +466,8 @@ const leftCrate =
         new THREE.BoxGeometry(1.4, 1.4, 1.4),
         woodMaterial
     );
+leftCrate.castShadow = true;
+leftCrate.receiveShadow = true;
 leftCrate.position.set(-4.8, 0.7, 5.5);
 leftCrate.rotation.y = Math.PI / 6;
 leftCrate.scale.set(1, 1.1, 1);
@@ -402,6 +478,8 @@ const stackedCrate =
         new THREE.BoxGeometry(1.15, 1.15, 1.15),
         woodMaterial
     );
+stackedCrate.castShadow = true;
+stackedCrate.receiveShadow = true;
 stackedCrate.position.set(-5.8, 0.575, 4.7);
 stackedCrate.rotation.z = -Math.PI / 12;
 stackedCrate.scale.set(1, 1, 1.1);
@@ -412,6 +490,8 @@ const barrel =
         new THREE.CylinderGeometry(0.65, 0.65, 1.5, 12),
         woodMaterial
     );
+barrel.castShadow = true;
+barrel.receiveShadow = true;
 barrel.position.set(3.2, 0.75, 6);
 barrel.rotation.z = Math.PI / 2;
 scene.add(barrel);
@@ -446,6 +526,7 @@ const leftBanner =
         new THREE.BoxGeometry(0.12, 2.1, 1.25),
         bannerMaterial
     );
+leftBanner.castShadow = true;
 leftBanner.position.set(-3.3, 3.1, -5.75);
 leftBanner.rotation.x = -Math.PI / 8;
 scene.add(leftBanner);
@@ -463,6 +544,7 @@ const rightBanner =
         new THREE.BoxGeometry(0.12, 2.1, 1.25),
         bannerMaterial
     );
+rightBanner.castShadow = true;
 rightBanner.position.set(3.3, 3.1, -5.75);
 rightBanner.rotation.x = Math.PI / 8;
 scene.add(rightBanner);
@@ -477,6 +559,8 @@ const deadTreeTrunk =
         new THREE.CylinderGeometry(0.35, 0.55, 3.8, 9),
         deadTreeMaterial
     );
+deadTreeTrunk.castShadow = true;
+deadTreeTrunk.receiveShadow = true;
 deadTreeTrunk.position.set(-7, 1.9, 5);
 deadTreeTrunk.rotation.z = -Math.PI / 16;
 deadTreeTrunk.scale.set(1.2, 1, 1.2);
@@ -487,6 +571,7 @@ const leftBranch =
         new THREE.CylinderGeometry(0.08, 0.18, 2, 8),
         deadTreeMaterial
     );
+leftBranch.castShadow = true;
 leftBranch.position.set(-7.5, 3.5, 5);
 leftBranch.rotation.z = Math.PI / 3;
 scene.add(leftBranch);
@@ -496,6 +581,7 @@ const rightBranch =
         new THREE.CylinderGeometry(0.08, 0.18, 2.3, 8),
         deadTreeMaterial
     );
+rightBranch.castShadow = true;
 rightBranch.position.set(-6.45, 3.7, 5);
 rightBranch.rotation.z = -Math.PI / 2.8;
 rightBranch.scale.set(1, 1, 1.15);
@@ -506,6 +592,7 @@ const upperBranch =
         new THREE.CylinderGeometry(0.06, 0.12, 1.7, 8),
         deadTreeMaterial
     );
+upperBranch.castShadow = true;
 upperBranch.position.set(-7.05, 4.45, 5);
 upperBranch.rotation.z = Math.PI / 10;
 scene.add(upperBranch);
