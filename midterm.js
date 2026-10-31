@@ -25,8 +25,8 @@ const camera =
 
 camera.position.set(
     0,
-    8,
-    15
+    10,
+    22
 );
 
 
