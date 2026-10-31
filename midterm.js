@@ -759,9 +759,10 @@ for (let ringIndex = 0; ringIndex < 4; ringIndex += 1) {
                 6,
                 48
             ),
-            new THREE.MeshBasicMaterial({
+            new THREE.MeshPhongMaterial({
                 color: 0xbfeaff,
                 transparent: true,
+                shininess: 120,
                 opacity: 0.75
             })
         );
