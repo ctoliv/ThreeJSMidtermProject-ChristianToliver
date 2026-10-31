@@ -175,15 +175,21 @@ scene.add(gateSpotlight.target);
 // ---------------------------------------------------
 
 const stoneMaterial =
-    new THREE.MeshStandardMaterial({
+    new THREE.MeshPhysicalMaterial({
         color: 0x7b8080,
-        roughness: 0.9
+        roughness: 0.45,
+        metalness: 0.35,
+        clearcoat: 0.25,
+        clearcoatRoughness: 0.4
     });
 
 const darkStoneMaterial =
-    new THREE.MeshStandardMaterial({
+    new THREE.MeshPhysicalMaterial({
         color: 0x555b60,
-        roughness: 0.95
+        roughness: 0.45,
+        metalness: 0.35,
+        clearcoat: 0.25,
+        clearcoatRoughness: 0.4
     });
 
 const roofMaterial =
@@ -199,28 +205,33 @@ const woodMaterial =
     });
 
 const bannerMaterial =
-    new THREE.MeshStandardMaterial({
+    new THREE.MeshToonMaterial({
         color: 0x8f1d2c,
-        side: THREE.DoubleSide,
-        roughness: 0.7
+        side: THREE.DoubleSide
     });
 
 const waterMaterial =
-    new THREE.MeshPhongMaterial({
+    new THREE.MeshPhysicalMaterial({
         color: 0x68a9c7,
-        shininess: 100
+        roughness: 0.2,
+        metalness: 0,
+        transmission: 0.3,
+        transparent: true,
+        opacity: 0.85
     });
 
 const ironMaterial =
-    new THREE.MeshStandardMaterial({
+    new THREE.MeshPhysicalMaterial({
         color: 0x252a30,
-        roughness: 0.6
+        roughness: 0.45,
+        metalness: 0.35,
+        clearcoat: 0.25,
+        clearcoatRoughness: 0.4
     });
 
-const deadTreeMaterial =
-    new THREE.MeshStandardMaterial({
-        color: 0x4a3325,
-        roughness: 1
+const deadTreeLambertMaterial =
+    new THREE.MeshLambertMaterial({
+        color: 0x4a3325
     });
 
 
@@ -683,7 +694,7 @@ scene.add(rightBanner);
 const deadTreeTrunk =
     new THREE.Mesh(
         new THREE.CylinderGeometry(0.35, 0.55, 3.8, 9),
-        deadTreeMaterial
+        deadTreeLambertMaterial
     );
 deadTreeTrunk.castShadow = true;
 deadTreeTrunk.receiveShadow = true;
@@ -695,7 +706,7 @@ scene.add(deadTreeTrunk);
 const leftBranch =
     new THREE.Mesh(
         new THREE.CylinderGeometry(0.08, 0.18, 2, 8),
-        deadTreeMaterial
+        deadTreeLambertMaterial
     );
 leftBranch.castShadow = true;
 leftBranch.position.set(-7.5, 3.5, 5);
@@ -705,7 +716,7 @@ scene.add(leftBranch);
 const rightBranch =
     new THREE.Mesh(
         new THREE.CylinderGeometry(0.08, 0.18, 2.3, 8),
-        deadTreeMaterial
+        deadTreeLambertMaterial
     );
 rightBranch.castShadow = true;
 rightBranch.position.set(-6.45, 3.7, 5);
@@ -716,7 +727,7 @@ scene.add(rightBranch);
 const upperBranch =
     new THREE.Mesh(
         new THREE.CylinderGeometry(0.06, 0.12, 1.7, 8),
-        deadTreeMaterial
+        deadTreeLambertMaterial
     );
 upperBranch.castShadow = true;
 upperBranch.position.set(-7.05, 4.45, 5);
