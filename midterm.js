@@ -359,31 +359,153 @@ gateArch.position.set(0, 3, -7);
 gateArch.rotation.z = 0;
 scene.add(gateArch);
 
-const gateDoor =
+const leftGatePivot =
+    new THREE.Group();
+leftGatePivot.position.set(-1.7, 0, -7.15);
+scene.add(leftGatePivot);
+
+const leftGateDoor =
     new THREE.Mesh(
-        new THREE.BoxGeometry(3.4, 3.1, 0.25),
+        new THREE.BoxGeometry(1.68, 3.1, 0.25),
         woodMaterial
     );
-gateDoor.castShadow = true;
-gateDoor.receiveShadow = true;
-gateDoor.position.set(0, 1.55, -7.15);
-scene.add(gateDoor);
+leftGateDoor.castShadow = true;
+leftGateDoor.receiveShadow = true;
+leftGateDoor.position.set(0.84, 1.55, 0);
+leftGatePivot.add(leftGateDoor);
 
-const gateIronBand =
-    new THREE.Mesh(
-        new THREE.BoxGeometry(3.45, 0.12, 0.3),
-        ironMaterial
-    );
-gateIronBand.position.set(0, 1.5, -7.05);
-scene.add(gateIronBand);
+const rightGatePivot =
+    new THREE.Group();
+rightGatePivot.position.set(1.7, 0, -7.15);
+scene.add(rightGatePivot);
 
-const gateVerticalBand =
+const rightGateDoor =
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.12, 3, 0.3),
-        ironMaterial
+        new THREE.BoxGeometry(1.68, 3.1, 0.25),
+        woodMaterial
     );
-gateVerticalBand.position.set(0, 1.55, -7.05);
-scene.add(gateVerticalBand);
+rightGateDoor.castShadow = true;
+rightGateDoor.receiveShadow = true;
+rightGateDoor.position.set(-0.84, 1.55, 0);
+rightGatePivot.add(rightGateDoor);
+
+const gateBands = [
+    { pivot: leftGatePivot, x: 0.84 },
+    { pivot: rightGatePivot, x: -0.84 }
+];
+
+gateBands.forEach((door) => {
+    const horizontalBand =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(1.68, 0.12, 0.3),
+            ironMaterial
+        );
+    horizontalBand.position.set(door.x, 1.5, 0.1);
+    door.pivot.add(horizontalBand);
+
+    const verticalBand =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(0.12, 3, 0.3),
+            ironMaterial
+        );
+    verticalBand.position.set(door.x, 1.55, 0.1);
+    door.pivot.add(verticalBand);
+});
+
+
+// ---------------------------------------------------
+// Enclosed Courtyard Walls and Interior
+// ---------------------------------------------------
+
+const leftCurtainWall =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(1, 4, 14),
+        stoneMaterial
+    );
+leftCurtainWall.castShadow = true;
+leftCurtainWall.receiveShadow = true;
+leftCurtainWall.position.set(-10, 2, 0);
+scene.add(leftCurtainWall);
+
+const rightCurtainWall =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(1, 4, 14),
+        stoneMaterial
+    );
+rightCurtainWall.castShadow = true;
+rightCurtainWall.receiveShadow = true;
+rightCurtainWall.position.set(10, 2, 0);
+scene.add(rightCurtainWall);
+
+[-5, -2.5, 0, 2.5, 5].forEach((z) => {
+    [-10, 10].forEach((x) => {
+        const sideBattlement =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(1.15, 1.2, 1.15),
+                darkStoneMaterial
+            );
+        sideBattlement.position.set(x, 4.6, z);
+        sideBattlement.castShadow = true;
+        sideBattlement.receiveShadow = true;
+        scene.add(sideBattlement);
+    });
+});
+
+const courtyardFloor =
+    new THREE.Mesh(
+        new THREE.PlaneGeometry(19, 13),
+        darkStoneMaterial
+    );
+courtyardFloor.rotation.x = -Math.PI / 2;
+courtyardFloor.position.set(0, 0.012, 0);
+courtyardFloor.receiveShadow = true;
+scene.add(courtyardFloor);
+
+for (let x = -8; x <= 8; x += 2) {
+    for (let z = -5; z <= 5; z += 2) {
+        const pavingStone =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(1.75, 0.025, 1.75),
+                ((x + z) / 2) % 2 === 0
+                    ? stoneMaterial
+                    : darkStoneMaterial
+            );
+        pavingStone.position.set(x, 0.035, z);
+        pavingStone.receiveShadow = true;
+        scene.add(pavingStone);
+    }
+}
+
+const frontLeftTower =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(1.35, 1.55, 5.4, 12),
+        stoneMaterial
+    );
+frontLeftTower.castShadow = true;
+frontLeftTower.receiveShadow = true;
+frontLeftTower.position.set(-10, 2.7, 7);
+scene.add(frontLeftTower);
+
+const frontRightTower =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(1.35, 1.55, 5.4, 12),
+        stoneMaterial
+    );
+frontRightTower.castShadow = true;
+frontRightTower.receiveShadow = true;
+frontRightTower.position.set(10, 2.7, 7);
+scene.add(frontRightTower);
+
+[[-10, 7], [10, 7]].forEach(([x, z]) => {
+    const towerRoof =
+        new THREE.Mesh(
+            new THREE.ConeGeometry(1.75, 2, 12),
+            roofMaterial
+        );
+    towerRoof.castShadow = true;
+    towerRoof.position.set(x, 6.4, z);
+    scene.add(towerRoof);
+});
 
 
 // ---------------------------------------------------
@@ -698,7 +820,7 @@ const deadTreeTrunk =
     );
 deadTreeTrunk.castShadow = true;
 deadTreeTrunk.receiveShadow = true;
-deadTreeTrunk.position.set(-7, 1.9, 5);
+deadTreeTrunk.position.set(-7, 1.9, 9);
 deadTreeTrunk.rotation.z = -Math.PI / 16;
 deadTreeTrunk.scale.set(1.2, 1, 1.2);
 scene.add(deadTreeTrunk);
@@ -709,7 +831,7 @@ const leftBranch =
         deadTreeLambertMaterial
     );
 leftBranch.castShadow = true;
-leftBranch.position.set(-7.5, 3.5, 5);
+leftBranch.position.set(-7.5, 3.5, 9);
 leftBranch.rotation.z = Math.PI / 3;
 scene.add(leftBranch);
 
@@ -719,7 +841,7 @@ const rightBranch =
         deadTreeLambertMaterial
     );
 rightBranch.castShadow = true;
-rightBranch.position.set(-6.45, 3.7, 5);
+rightBranch.position.set(-6.45, 3.7, 9);
 rightBranch.rotation.z = -Math.PI / 2.8;
 rightBranch.scale.set(1, 1, 1.15);
 scene.add(rightBranch);
@@ -730,7 +852,7 @@ const upperBranch =
         deadTreeLambertMaterial
     );
 upperBranch.castShadow = true;
-upperBranch.position.set(-7.05, 4.45, 5);
+upperBranch.position.set(-7.05, 4.45, 9);
 upperBranch.rotation.z = Math.PI / 10;
 scene.add(upperBranch);
 
@@ -741,6 +863,8 @@ scene.add(upperBranch);
 let fountainGlowOn = true;
 let bannerAndFountainMoving = true;
 let gateLightOn = true;
+let gateOpen = false;
+let gateAnimation = 0;
 
 window.addEventListener(
     'keydown',
@@ -768,6 +892,11 @@ window.addEventListener(
 
             gateSpotlight.visible =
                 gateLightOn;
+        }
+
+        if (event.key === '4') {
+            gateOpen =
+                !gateOpen;
         }
     }
 );
@@ -905,6 +1034,17 @@ if (bannerAndFountainMoving) {
             sway * 0.10;
     });
     }
+
+    const gateTarget =
+        gateOpen ? 1 : 0;
+
+    gateAnimation +=
+        (gateTarget - gateAnimation) * 0.055;
+
+    leftGatePivot.rotation.y =
+        -gateAnimation * Math.PI / 2;
+    rightGatePivot.rotation.y =
+        gateAnimation * Math.PI / 2;
 
     controls.update();
 
