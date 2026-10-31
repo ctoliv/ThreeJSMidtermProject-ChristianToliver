@@ -229,6 +229,26 @@ const ironMaterial =
         clearcoatRoughness: 0.4
     });
 
+const goldMaterial =
+    new THREE.MeshPhysicalMaterial({
+        color: 0xd8b44a,
+        roughness: 0.35,
+        metalness: 0.75,
+        clearcoat: 0.3
+    });
+
+const royalMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x8e1d2c,
+        roughness: 0.75
+    });
+
+const royalSkinMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0xb7793e,
+        roughness: 0.8
+    });
+
 const deadTreeLambertMaterial =
     new THREE.MeshLambertMaterial({
         color: 0x4a3325
@@ -411,6 +431,71 @@ gateBands.forEach((door) => {
     verticalBand.position.set(door.x, 1.55, 0.1);
     door.pivot.add(verticalBand);
 });
+
+// ---------------------------------------------------
+// King in Front of the Gate
+// ---------------------------------------------------
+
+const frontKing =
+    new THREE.Group();
+frontKing.position.set(0, 0, -9);
+scene.add(frontKing);
+
+const frontKingBody =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(0.42, 0.68, 1.55, 12),
+        royalMaterial
+    );
+frontKingBody.position.y = 1.05;
+frontKingBody.castShadow = true;
+frontKingBody.receiveShadow = true;
+frontKing.add(frontKingBody);
+
+const frontKingCape =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(0.7, 0.92, 1.7, 12, 1, true),
+        royalMaterial
+    );
+frontKingCape.position.y = 1.05;
+frontKingCape.scale.z = 0.45;
+frontKingCape.castShadow = true;
+frontKing.add(frontKingCape);
+
+const frontKingHead =
+    new THREE.Mesh(
+        new THREE.SphereGeometry(0.38, 16, 12),
+        royalSkinMaterial
+    );
+frontKingHead.position.set(0, 2.15, 0);
+frontKingHead.castShadow = true;
+frontKing.add(frontKingHead);
+
+const frontKingCrown =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(0.34, 0.42, 0.32, 10),
+        goldMaterial
+    );
+frontKingCrown.position.y = 2.52;
+frontKingCrown.castShadow = true;
+frontKing.add(frontKingCrown);
+
+for (let i = 0; i < 5; i += 1) {
+    const crownPoint =
+        new THREE.Mesh(
+            new THREE.ConeGeometry(0.095, 0.42, 8),
+            goldMaterial
+        );
+    const angle =
+        (i / 5) * Math.PI * 2;
+
+    crownPoint.position.set(
+        Math.cos(angle) * 0.34,
+        2.88,
+        Math.sin(angle) * 0.34
+    );
+    crownPoint.castShadow = true;
+    frontKing.add(crownPoint);
+}
 
 
 // ---------------------------------------------------
