@@ -110,7 +110,7 @@ scene.add(ground);
 const ambientLight =
     new THREE.AmbientLight(
         0x8090b0,
-        0.45
+        0.6
     );
 
 scene.add(ambientLight);
@@ -380,17 +380,26 @@ scene.add(gateVerticalBand);
 // ---------------------------------------------------
 
 const courtyardPillarPositions = [
-    [-4, 1, 1],
-    [4, 1, 1]
+    [-4, 1, -1],
+    [4, 1, -1]
 ];
 
 courtyardPillarPositions.forEach((position) => {
+    const pillarHeight =
+        3.3 * 1.25;
+
     const pillar =
         new THREE.Mesh(
             new THREE.CylinderGeometry(0.55, 0.65, 3.3, 10),
             darkStoneMaterial
         );
-    pillar.position.set(position[0], position[1] + 1.65, position[2]);
+    pillar.position.set(
+        position[0],
+        pillarHeight / 2,
+        position[2]
+    );
+    pillar.castShadow = true;
+    pillar.receiveShadow = true;
     pillar.scale.set(1, 1.25, 1);
     scene.add(pillar);
 
@@ -399,7 +408,13 @@ courtyardPillarPositions.forEach((position) => {
             new THREE.BoxGeometry(1.35, 0.35, 1.35),
             stoneMaterial
         );
-    pillarTop.position.set(position[0], 3.85, position[2]);
+    pillarTop.position.set(
+        position[0],
+        pillarHeight + 0.175,
+        position[2]
+    );
+    pillarTop.castShadow = true;
+    pillarTop.receiveShadow = true;
     pillarTop.rotation.y = Math.PI / 8;
     scene.add(pillarTop);
 });
@@ -828,7 +843,7 @@ fountainWater.scale.set(
 // 6. Make the banners sway
 if (bannersMoving) {
 
-        leftBanner.rotation.z =
+         leftBanner.rotation.z =
             Math.sin(Date.now() * 0.0025) * 0.20;
         leftBanner.rotation.y =
             Math.sin(Date.now() * 0.0025) * 0.12;
