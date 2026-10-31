@@ -147,7 +147,7 @@ const gateSpotlight =
         0xffcc88,
         80,
         30,
-        Math.PI / 6,
+        Math.PI / 5,
         0.4,
         1
     );
@@ -384,6 +384,8 @@ const courtyardPillarPositions = [
     [4, 1, -1]
 ];
 
+const courtyardFlags = [];
+
 courtyardPillarPositions.forEach((position) => {
     const pillarHeight =
         3.3 * 1.25;
@@ -417,6 +419,33 @@ courtyardPillarPositions.forEach((position) => {
     pillarTop.receiveShadow = true;
     pillarTop.rotation.y = Math.PI / 8;
     scene.add(pillarTop);
+
+    const flagPole =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(0.05, 0.05, 2.2, 8),
+            ironMaterial
+        );
+    flagPole.castShadow = true;
+    flagPole.position.set(
+        position[0],
+        pillarHeight + 1.1,
+        position[2]
+    );
+    scene.add(flagPole);
+
+    const flag =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(1.35, 1.1, 0.08),
+            bannerMaterial
+        );
+    flag.castShadow = true;
+    flag.position.set(
+        position[0] + 0.675,
+        pillarHeight + 1.75,
+        position[2]
+    );
+    scene.add(flag);
+    courtyardFlags.push(flag);
 });
 
 
@@ -699,7 +728,7 @@ scene.add(upperBranch);
 // ---------------------------------------------------
 
 let fountainGlowOn = true;
-let bannersMoving = true;
+let bannerAndFountainMoving = true;
 let gateLightOn = true;
 
 window.addEventListener(
@@ -718,8 +747,8 @@ window.addEventListener(
         }
 
         if (event.key === '2') {
-            bannersMoving =
-                !bannersMoving;
+            bannerAndFountainMoving =
+                !bannerAndFountainMoving;
         }
 
         if (event.key === '3') {
@@ -740,108 +769,110 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-// 1. Slowly rotate the fountain glow
-fountainGlow.rotation.y += 0.03;
+if (bannerAndFountainMoving) {
+    // 1. Slowly rotate the fountain glow
+    fountainGlow.rotation.y += 0.03;
 
-// 2. Make the fountain glow pulse
-const pulse =
-    1 + Math.sin(Date.now() * 0.003) * 0.15;
+    // 2. Make the fountain glow pulse
+    const pulse =
+        1 + Math.sin(Date.now() * 0.003) * 0.15;
 
-fountainGlow.scale.set(
-    pulse,
-    pulse,
-    pulse
-);
-
-// 3. Animate the central fountain sprays
-const fountainTime =
-    Date.now() * 0.001;
-
-fountainSprays.forEach((spray, index) => {
-    const sprayPulse =
-        1 +
-        Math.sin(fountainTime * 2.2 - index * 0.8) *
-        (0.12 + index * 0.03);
-
-    spray.scale.set(
-        sprayPulse,
-        0.75 + sprayPulse * 0.25,
-        sprayPulse
+    fountainGlow.scale.set(
+        pulse,
+        pulse,
+        pulse
     );
 
-    spray.rotation.y =
-        fountainTime * (0.25 + index * 0.08);
-});
+    // 3. Animate the central fountain sprays
+    const fountainTime =
+        Date.now() * 0.001;
 
-// 4. Animate droplets in curved, repeated water arcs
-fountainDrops.forEach((dropData) => {
-    const progress =
-        (fountainTime * 0.32 + dropData.offset) % 1;
+    fountainSprays.forEach((spray, index) => {
+        const sprayPulse =
+            1 +
+            Math.sin(fountainTime * 2.2 - index * 0.8) *
+            (0.12 + index * 0.03);
 
-    const arc =
-        Math.sin(progress * Math.PI);
+        spray.scale.set(
+            sprayPulse,
+            0.75 + sprayPulse * 0.25,
+            sprayPulse
+        );
 
-    const horizontalRadius =
-        dropData.radius *
-        (0.15 + progress * 0.85);
+        spray.rotation.y =
+            fountainTime * (0.25 + index * 0.08);
+    });
 
-    dropData.mesh.position.set(
-        5 +
-            Math.cos(
-                dropData.angle + fountainTime * 0.12
-            ) *
-            horizontalRadius,
-        2.25 +
-            arc * 1.8 -
-            progress * 0.15,
-        4 +
-            Math.sin(
-                dropData.angle + fountainTime * 0.12
-            ) *
-            horizontalRadius
+    // 4. Animate droplets in curved, repeated water arcs
+    fountainDrops.forEach((dropData) => {
+        const progress =
+            (fountainTime * 0.32 + dropData.offset) % 1;
+
+        const arc =
+            Math.sin(progress * Math.PI);
+
+        const horizontalRadius =
+            dropData.radius *
+            (0.15 + progress * 0.85);
+
+        dropData.mesh.position.set(
+            5 +
+                Math.cos(
+                    dropData.angle + fountainTime * 0.12
+                ) *
+                horizontalRadius,
+            2.25 +
+                arc * 1.8 -
+                progress * 0.15,
+            4 +
+                Math.sin(
+                    dropData.angle + fountainTime * 0.12
+                ) *
+                horizontalRadius
+        );
+
+        const dropSize =
+            0.7 +
+            arc * 0.65;
+
+        dropData.mesh.scale.set(
+            dropSize,
+            dropSize * 1.25,
+            dropSize
+        );
+    });
+
+    // 5. Expand circular water ripples across the basin
+    fountainRipples.forEach((ripple, index) => {
+        const ripplePhase =
+            (fountainTime * 0.45 + index / fountainRipples.length) %
+            1;
+
+        const rippleScale =
+            0.55 + ripplePhase * 1.05;
+
+        ripple.scale.set(
+            rippleScale,
+            rippleScale,
+            rippleScale
+        );
+
+        ripple.material.opacity =
+            0.7 * (1 - ripplePhase);
+    });
+
+    const surfacePulse =
+        1 + Math.sin(fountainTime * 2.4) * 0.018;
+
+    fountainWater.scale.set(
+        surfacePulse,
+        1,
+        surfacePulse
     );
-
-    const dropSize =
-        0.7 +
-        arc * 0.65;
-
-    dropData.mesh.scale.set(
-        dropSize,
-        dropSize * 1.25,
-        dropSize
-    );
-});
-
-// 5. Expand circular water ripples across the basin
-fountainRipples.forEach((ripple, index) => {
-    const ripplePhase =
-        (fountainTime * 0.45 + index / fountainRipples.length) %
-        1;
-
-    const rippleScale =
-        0.55 + ripplePhase * 1.05;
-
-    ripple.scale.set(
-        rippleScale,
-        rippleScale,
-        rippleScale
-    );
-
-    ripple.material.opacity =
-        0.7 * (1 - ripplePhase);
-});
-
-const surfacePulse =
-    1 + Math.sin(fountainTime * 2.4) * 0.018;
-
-fountainWater.scale.set(
-    surfacePulse,
-    1,
-    surfacePulse
-);
+}
 
 // 6. Make the banners sway
-if (bannersMoving) {
+if (bannerAndFountainMoving) {
 
          leftBanner.rotation.z =
             Math.sin(Date.now() * 0.0025) * 0.20;
@@ -852,6 +883,16 @@ if (bannersMoving) {
             -Math.sin(Date.now() * 0.0025) * 0.20;
         rightBanner.rotation.y =
             -Math.sin(Date.now() * 0.0025) * 0.12;
+
+    courtyardFlags.forEach((flag, index) => {
+        const sway =
+            Math.sin(Date.now() * 0.0025 + index * 0.8);
+
+        flag.rotation.z =
+            sway * 0.16;
+        flag.rotation.y =
+            sway * 0.10;
+    });
     }
 
     controls.update();
